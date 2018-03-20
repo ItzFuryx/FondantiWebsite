@@ -1,0 +1,26 @@
+﻿body {
+    background-color: #fea2ff;
+}
+
+.header-titlebar {
+    padding: 50px 0;
+    background-color: #cdfdf8;
+}
+
+.header-title {
+    color: #1a7bbf;
+    font-size: 60px;
+}
+
+.title {
+    color: #1a7bbf;
+    font-size: 42px;
+}
+
+.section-cake {
+    padding: 50px 0;
+}
+
+.section-galery {
+    padding: 50px 0 0;
+}

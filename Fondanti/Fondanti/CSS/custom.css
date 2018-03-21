@@ -1,4 +1,5 @@
-﻿body {
+﻿html, body {
+    height: 100%;
     background-color: #fea2ff;
 }
 
@@ -7,7 +8,7 @@
     background-color: #cdfdf8;
 }
 
-.header-title {
+.header-title{
     color: #1a7bbf;
     font-size: 60px;
 }
@@ -17,7 +18,7 @@
     font-size: 42px;
 }
 
-.section-cake {
+.section-cake{
     padding: 50px 0;
 }
 

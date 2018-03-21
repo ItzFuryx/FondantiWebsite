@@ -1,14 +1,19 @@
 ﻿html, body {
     height: 100%;
     background-color: #fea2ff;
+    font-family: 'Courgette', serif;
 }
 
 .header-titlebar {
     padding: 50px 0;
     background-color: #cdfdf8;
 }
+.footer-bar {
+    margin-top: 200px;
+    background-color: #cdfdf8;
+}
 
-.header-title{
+.header-title {
     color: #1a7bbf;
     font-size: 60px;
 }
@@ -28,12 +33,14 @@
 .text-big{
     font-size: 50px;
 }
-@media (min-width: 768px) {
+.fondanti-border {
+    border: 5px #a7cdf2 !important;
+    border-style: solid !important;
+}
 
+@media (min-width: 768px) {
     /* show 3 items */
-    .carousel-inner .active,
-    .carousel-inner .active + .carousel-item,
-    .carousel-inner .active + .carousel-item + .carousel-item {
+    .carousel-inner .active, .carousel-inner .active + .carousel-item, .carousel-inner .active + .carousel-item + .carousel-item {
         display: block;
     }
 

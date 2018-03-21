@@ -6,8 +6,7 @@
     <meta name="viewport" content="width=device-width,initial-scale=.8,maximum-scale=1" />
     <!-- CSS -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
-    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.8/css/solid.css">
-    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.8/css/fontawesome.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Courgette">
     <link rel="stylesheet" href="~/CSS/custom.css">
 
@@ -26,6 +25,7 @@
         <div class="container-fluid text-center header-titlebar fondanti-border">
             <h1 class="header-title">Fondanti</h1>
         </div>
+
     </header>
     <div id="body">
         @RenderSection("featured", required: false)
@@ -33,5 +33,12 @@
             @RenderBody()
         </section>
     </div>
+    <footer class="page-footer font-small blue pt-4 mt-4">
+        <div class="container-fluid footer-bar">
+            <a class="btn btn-social-icon btn-facebook text-big" href="https://www.facebook.com/fondanti/" target="_blank">
+                <span class="fa fa-facebook"></span>
+            </a>
+        </div>
+    </footer>
 </body>
 </html>

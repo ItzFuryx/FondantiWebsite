@@ -1,0 +1,94 @@
+﻿@using WebMatrix.Data
+
+@{
+    //Check if logged in
+    if (Session["userame"] == null || Session["password"] == null)
+    {
+        Response.Redirect("~/Admin.cshtml");
+    }
+    //Database Connection
+    string connectionString = @"Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename=|DataDirectory|\Fondanti.mdf;Integrated Security=True";
+    string provider = "System.Data.SqlClient";
+    Database db = Database.OpenConnectionString(connectionString, provider);
+
+    Page.Title = "Fondanti";
+    Layout = "~/_Layout.cshtml";
+    //Layout = "Your Layout Page goes here";
+
+}
+<!DOCTYPE html>
+<html>
+<head>
+
+</head>
+<body>
+    <h1 style="text-align:center">Succesvol Ingelogt, @Session["userame"]</h1>
+    <br />
+    <form method="POST">
+        <div class="container">
+            <div class="card">
+                <div class="card-body" style="text-align:center; background-color:#F8F8F8" ;>Wijzig hier uw Vullingen!
+                    <table class="table">
+                            @{ 
+                                if(IsPost && Request.Form["updatevulling"] == "true" && Validation.IsValid())
+                                {
+                                    <thead class="thead-light">
+                                        <tr>
+                                            <th>Prijs</th>
+                                            <th>Smaak</th>
+                                            <th>Wijzigen</th>
+                                            <th>Verwijderen</th>
+                                        </tr>
+                                    </thead>
+                                    var vulling = db.Query(@"select * FROM Vulling");
+                                    foreach (var row in vulling)
+                                    {
+                                        <tr>
+                                            <td>@row.vulling_prijs</td>
+                                            <td>@row.smaak</td>
+                                            <td><button type="submit" class="btnchange" name="wijzigsmaak" value="@row.vulling_id">Wijzigen</button></td>
+                                            <td><button type="submit" class="btnremove" name="verwijdersmaak" value="@row.vulling_id">Verwijderen</button></td>
+                                        </tr>
+                                    }
+                                        <tr>
+                                            <td>
+                                                <input type="text" class="form-control" name="nieuwe_vulling_prijs" placeholder="Prijs" style="text-align:center" />
+                                            </td>
+                                            <td>
+                                                <input type="text" class="form-control" name="nieuwesmaak" placeholder="Smaak" style="text-align:center" />
+                                            </td>
+                                            <td><button type="submit" class="btnchange" name="wijzigsmaak" disabled>Wijzigen</button></td>
+                                            <td><button type="submit" class="btnupdate" name="smaaktoevoegen">Toevoegen</button></td>
+                                        </tr>
+                                }
+                            }
+                         </table>
+                     </div>
+                 <button type="submit" class="btnupdate" name="updatevulling" value="true">Update</button>
+            </div>
+
+
+            <br />
+            <div class="card">
+                <div class="card-body" style="text-align:center; background-color:#F8F8F8" ;>klik hier om lagen te updaten!</div>
+                <button type="submit" class="btn1" name="updatelaag" value="laag">Update</button>
+            </div>
+            <br />
+            <div class="card">
+                <div class="card-body" style="text-align:center; background-color:#F8F8F8" ;>klik hier om smaken te updaten!</div>
+                <button type="button" class="btn1">Update</button>
+            </div>
+            <br />
+            <div class="card">
+                <div class="card-body" style="text-align:center; background-color:#F8F8F8" ;>klik hier om smaken te updaten!</div>
+                <button type="button" class="btn1">Update</button>
+            </div>
+            <br />
+            <div class="card">
+                <div class="card-body" style="text-align:center; background-color:#F8F8F8" ;>klik hier om smaken te updaten!</div>
+                <button type="button" class="btn1">Update</button>
+            </div>
+        </div>
+    </form>
+</body>
+</html>

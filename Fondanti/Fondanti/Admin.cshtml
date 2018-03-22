@@ -1,12 +1,17 @@
 ﻿@using WebMatrix.Data
 
 @{
-    Page.Title = "Fondanti";
-    Layout = "~/_Layout.cshtml";
-    //Layout = "Your Layout Page goes here";
+    //Database Connection
     string connectionString = @"Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename=|DataDirectory|\Fondanti.mdf;Integrated Security=True";
     string provider = "System.Data.SqlClient";
     Database db = Database.OpenConnectionString(connectionString, provider);
+    Session["password"] = null;
+    Session["userame"] = null;
+
+    Page.Title = "Fondanti";
+    Layout = "~/_Layout.cshtml";
+    //Layout = "Your Layout Page goes here";
+
 }
 <!DOCTYPE html>
 <html>
@@ -42,15 +47,17 @@
 
             if (login == null)
             {
-                <p>mislukt</p>
+            <p>Inloggen Mislukt, Probeer Het Opnieuw!</p>
             }
             else
             {
                 var records = db.Query("SELECT * FROM Admin WHERE username =@0 AND password=@1", username, password);
                 foreach (var succes in records)
                 {
-                    string user = succes.unqcode;
-                    <p>gelukt</p>
+                    string user = succes.username;
+                    Session["password"] = password;
+                    Session["userame"] = username;
+                    Response.Redirect("~/User.cshtml");
                 }
             }
         }

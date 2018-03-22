@@ -15,6 +15,7 @@
     Layout = "~/_Layout.cshtml";
     //Layout = "Your Layout Page goes here";
 
+    
 }
 <!DOCTYPE html>
 <html>
@@ -30,7 +31,7 @@
                 <div class="card-body" style="text-align:center; background-color:#F8F8F8" ;>Wijzig hier uw Vullingen!
                     <table class="table">
                             @{ 
-                                if(IsPost && Request.Form["updatevulling"] == "true" && Validation.IsValid())
+                                if(Session["updatevulling"] == "true" && Validation.IsValid())
                                 {
                                     <thead class="thead-light">
                                         <tr>
@@ -46,8 +47,8 @@
                                         <tr>
                                             <td>@row.vulling_prijs</td>
                                             <td>@row.smaak</td>
-                                            <td><button type="submit" class="btnchange" name="wijzigsmaak" value="@row.vulling_id">Wijzigen</button></td>
-                                            <td><button type="submit" class="btnremove" name="verwijdersmaak" value="@row.vulling_id">Verwijderen</button></td>
+                                            <td><button type="submit" class="btnchange" name="wijzigen" value="@row.vulling_id">Wijzigen</button></td>
+                                            <td><button type="submit" class="btnremove" name="verwijderen" value="@row.vulling_id">Verwijderen</button></td>
                                         </tr>
                                     }
                                         <tr>
@@ -55,16 +56,97 @@
                                                 <input type="text" class="form-control" name="nieuwe_vulling_prijs" placeholder="Prijs" style="text-align:center" />
                                             </td>
                                             <td>
-                                                <input type="text" class="form-control" name="nieuwesmaak" placeholder="Smaak" style="text-align:center" />
+                                                <input type="text" class="form-control" name="nieuwe_smaak" placeholder="Smaak" style="text-align:center" />
                                             </td>
-                                            <td><button type="submit" class="btnchange" name="wijzigsmaak" disabled>Wijzigen</button></td>
-                                            <td><button type="submit" class="btnupdate" name="smaaktoevoegen">Toevoegen</button></td>
+                                            <td><button type="submit" class="btnupdate" name="toevoegen" value="true">Toevoegen</button></td>
                                         </tr>
+                                    if(IsPost && Request["toevoegen"] == "true")
+                                    {
+                                        var nieuwesmaak = Request["nieuwe_smaak"];
+                                        var nieuwevullingprijs = Request["nieuwe_vulling_prijs"];
+                                        
+                                        var succes = db.Execute(@"INSERT INTO Vulling (smaak, vulling_prijs) VALUES (@0, @1)", nieuwesmaak, nieuwevullingprijs);
+                                        if(succes == 1)
+                                        {
+                                            <h2 style="text-align:center; color:green;">Succesvol nieuwe vulling toegevoegd!</h2>
+                                            Response.Redirect("~/User.cshtml");
+                                        }
+                                        else
+                                        {
+                                            <h2 style="text-align:center; color:red;">Nieuwe vulling toevoegen mislukt, probeer het opnieuw!</h2>
+                                        }
+                                    }
+                                    else if(IsPost && Request["verwijderen"] != null)
+                                    {
+                                        var vulling_id = Request["verwijderen"];
+                                        var succes = db.Execute(@"DELETE FROM Vulling WHERE vulling_id = @0", vulling_id);
+                                        if(succes == 1)
+                                        {
+                                             <h2 style="text-align:center; color:green;">Succesvol Vulling Verwijderd!</h2>
+                                            Response.Redirect("~/User.cshtml");
+                                        }
+                                        else
+                                        {
+                                             <h2 style="text-align:center; color:red;">Vulling verwijderen is mislukt, probeer het opnieuw!</h2>
+                                        }
+                                    }
+                                    else if(IsPost && Request["wijzigen"] != null)
+                                    {
+                                        var vulling_id = Request["wijzigen"];
+                                        var succes = db.Query(@"SELECT * FROM Vulling WHERE vulling_id=@0", vulling_id);
+                                        foreach(var row in succes)
+                                        {
+                                             <tr>
+                                                 <td><input type="text" class="form-control" name="wijzigprijs" value="@row.vulling_prijs" style="text-align:center" /></td>
+                                                 <td><input type="text" class="form-control" name="wijzigsmaak" value="@row.smaak" style="text-align:center" /></td>
+                                                 <td><button type="submit" class="btnchange" name="wijzigitem" value="true">Wijzigen</button></td>
+                                             </tr>
+                                        }
+                                    }
+                                    else if(IsPost && Request["wijzigitem"] == "true")
+                                    {
+                                        var vulling_id = Request["wijzigen"];
+                                        var wijzigprijs = Request["wijzigprijs"];
+                                        var wijzigsmaak = Request["wijzigsmaak"];
+
+                                        var succesa = db.Execute(@"UPDATE Vulling SET vulling_prijs = @0, smaak = @1 WHERE vulling_id = @2", wijzigprijs, wijzigsmaak, vulling_id);
+                                        if(succesa == 1)
+                                        {
+                                            <h2 style="text -align:center; color:green;">Succesvol nieuwe vulling toegevoegd!</h2>
+                                             Response.Redirect("~/User.cshtml");
+                                            }
+                                            else
+                                            {
+                                                <h2 style="text-align:center; color:red;">Nieuwe vulling toevoegen mislukt, probeer het opnieuw!</h2>
+                                                @vulling_id
+                                            }
+                                    }
+                                    else
+                                    {
+                                        <p>lol</p>
+                                    }
                                 }
                             }
                          </table>
                      </div>
-                 <button type="submit" class="btnupdate" name="updatevulling" value="true">Update</button>
+                @{ 
+                    if(Session["updatevulling"] == "true")
+                    {
+                        <button type="submit" class="btnremove" name="closeupdatevulling" value="true">Sluiten</button>
+                        if(IsPost && Request["closeupdatevulling"] == "true")
+                        {
+                            Session["updatevulling"] = null;
+                            Response.Redirect("~/User.cshtml");
+                        }
+                    }
+                    else
+                    {
+                        <button type="submit" class="btnupdate" name="updatevulling" value="true">Update</button>
+                        Session["updatevulling"] = "true";
+                    }
+
+                }
+                 
             </div>
 
 

@@ -64,16 +64,22 @@
                                     {
                                         var nieuwesmaak = Request["nieuwe_smaak"];
                                         var nieuwevullingprijs = Request["nieuwe_vulling_prijs"];
-                                        
-                                        var succes = db.Execute(@"INSERT INTO Vulling (smaak, vulling_prijs) VALUES (@0, @1)", nieuwesmaak, nieuwevullingprijs);
-                                        if(succes == 1)
+                                        if(String.IsNullOrEmpty(nieuwesmaak) || String.IsNullOrEmpty(nieuwevullingprijs))
                                         {
-                                            <h2 style="text-align:center; color:green;">Succesvol nieuwe vulling toegevoegd!</h2>
-                                            Response.Redirect("~/User.cshtml");
+                                            <h4 style="text-align:center; color:red;">Niet alle vakken zijn volledig ingevuld, probeer het opnieuw!</h4>
                                         }
                                         else
                                         {
-                                            <h2 style="text-align:center; color:red;">Nieuwe vulling toevoegen mislukt, probeer het opnieuw!</h2>
+                                            var succes = db.Execute(@"INSERT INTO Vulling (smaak, vulling_prijs) VALUES (@0, @1)", nieuwesmaak, nieuwevullingprijs);
+                                            if(succes == 1)
+                                            {
+                                                <h4 style="text-align:center; color:green;">Succesvol nieuwe vulling toegevoegd!</h4>
+                                                Response.Redirect("~/User.cshtml");
+                                            }
+                                            else
+                                            {
+                                                <h4 style="text-align:center; color:red;">Nieuwe vulling toevoegen mislukt, probeer het opnieuw!</h4>
+                                            }
                                         }
                                     }
                                     else if(IsPost && Request["verwijderen"] != null)
@@ -82,12 +88,12 @@
                                         var succes = db.Execute(@"DELETE FROM Vulling WHERE vulling_id = @0", vulling_id);
                                         if(succes == 1)
                                         {
-                                             <h2 style="text-align:center; color:green;">Succesvol Vulling Verwijderd!</h2>
+                                             <h4 style="text-align:center; color:green;">Succesvol Vulling Verwijderd!</h4>
                                             Response.Redirect("~/User.cshtml");
                                         }
                                         else
                                         {
-                                             <h2 style="text-align:center; color:red;">Vulling verwijderen is mislukt, probeer het opnieuw!</h2>
+                                             <h4 style="text-align:center; color:red;">Vulling verwijderen is mislukt, probeer het opnieuw!</h4>
                                         }
                                     }
                                     else if(IsPost && Request["wijzigen"] != null)
@@ -112,18 +118,14 @@
                                         var succesa = db.Execute(@"UPDATE Vulling SET vulling_prijs = @0, smaak = @1 WHERE vulling_id = @2", wijzigprijs, wijzigsmaak, vulling_id);
                                         if(succesa == 1)
                                         {
-                                            <h2 style="text -align:center; color:green;">Succesvol nieuwe vulling toegevoegd!</h2>
+                                            <h4 style="text -align:center; color:green;">Succesvol nieuwe vulling toegevoegd!</h4>
                                              Response.Redirect("~/User.cshtml");
                                             }
                                             else
                                             {
-                                                <h2 style="text-align:center; color:red;">Nieuwe vulling toevoegen mislukt, probeer het opnieuw!</h2>
+                                                <h4 style="text-align:center; color:red;">Nieuwe vulling toevoegen mislukt, probeer het opnieuw!</h4>
                                                 @vulling_id
                                             }
-                                    }
-                                    else
-                                    {
-                                        <p>lol</p>
                                     }
                                 }
                             }

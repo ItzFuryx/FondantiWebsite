@@ -78,7 +78,7 @@
             //Set options text
             this.$makeCake.find("#optionsMakeCake").html(optionsHtml);
             //Set options slider
-            this.$makeCake.find("#chooseOption").html(buttonOptionsHtml);
+            this.$makeCake.find("#chooseOptionMakeCake").html(buttonOptionsHtml);
         }
     }
 

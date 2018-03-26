@@ -28,15 +28,15 @@
     <form method="POST">
         <div class="container">
             <div class="card">
-                <div class="card-body" style="text-align:center; background-color:#F8F8F8" ;>Wijzig hier uw Vullingen!
+                <div class="card-body" style="text-align:center; background-color:#F8F8F8" ;>Vullingen
                     <table class="table">
                             @{ 
                                 if(Session["updatevulling"] == "true" && Validation.IsValid())
                                 {
                                     <thead class="thead-light">
                                         <tr>
-                                            <th>Prijs</th>
                                             <th>Smaak</th>
+                                            <th>Prijs</th>
                                             <th>Wijzigen</th>
                                             <th>Verwijderen</th>
                                         </tr>
@@ -45,18 +45,18 @@
                                     foreach (var row in vulling)
                                     {
                                         <tr>
-                                            <td>@row.vulling_prijs</td>
                                             <td>@row.smaak</td>
+                                            <td>@row.vulling_prijs</td>
                                             <td><button type="submit" class="btnchange" name="wijzigen" value="@row.vulling_id">Wijzigen</button></td>
                                             <td><button type="submit" class="btnremove" name="verwijderen" value="@row.vulling_id">Verwijderen</button></td>
                                         </tr>
                                     }
                                         <tr>
                                             <td>
-                                                <input type="text" class="form-control" name="nieuwe_vulling_prijs" placeholder="Prijs" style="text-align:center" />
+                                                <input type="text" class="form-control" name="nieuwe_smaak" placeholder="Smaak" style="text-align:center" />
                                             </td>
                                             <td>
-                                                <input type="text" class="form-control" name="nieuwe_smaak" placeholder="Smaak" style="text-align:center" />
+                                                <input type="text" class="form-control" name="nieuwe_vulling_prijs" placeholder="Prijs" style="text-align:center" />
                                             </td>
                                             <td><button type="submit" class="btnupdate" name="toevoegen" value="true">Toevoegen</button></td>
                                         </tr>
@@ -73,7 +73,6 @@
                                             var succes = db.Execute(@"INSERT INTO Vulling (smaak, vulling_prijs) VALUES (@0, @1)", nieuwesmaak, nieuwevullingprijs);
                                             if(succes == 1)
                                             {
-                                                <h4 style="text-align:center; color:green;">Succesvol nieuwe vulling toegevoegd!</h4>
                                                 Response.Redirect("~/User.cshtml");
                                             }
                                             else
@@ -88,7 +87,6 @@
                                         var succes = db.Execute(@"DELETE FROM Vulling WHERE vulling_id = @0", vulling_id);
                                         if(succes == 1)
                                         {
-                                             <h4 style="text-align:center; color:green;">Succesvol Vulling Verwijderd!</h4>
                                             Response.Redirect("~/User.cshtml");
                                         }
                                         else
@@ -103,29 +101,34 @@
                                         foreach(var row in succes)
                                         {
                                              <tr>
-                                                 <td><input type="text" class="form-control" name="wijzigprijs" value="@row.vulling_prijs" style="text-align:center" /></td>
                                                  <td><input type="text" class="form-control" name="wijzigsmaak" value="@row.smaak" style="text-align:center" /></td>
-                                                 <td><button type="submit" class="btnchange" name="wijzigitem" value="true">Wijzigen</button></td>
+                                                 <td><input type="text" class="form-control" name="wijzigprijs" value="@row.vulling_prijs" style="text-align:center" /></td>
+                                                 <td><button type="submit" class="btnchange" name="wijzigitem" value="@row.vulling_id">Wijzigen</button></td>
                                              </tr>
                                         }
                                     }
-                                    else if(IsPost && Request["wijzigitem"] == "true")
+                                    else if(IsPost && Request["wijzigitem"] != null)
                                     {
-                                        var vulling_id = Request["wijzigen"];
+                                        var vulling_id = Request["wijzigitem"];
                                         var wijzigprijs = Request["wijzigprijs"];
                                         var wijzigsmaak = Request["wijzigsmaak"];
-
-                                        var succesa = db.Execute(@"UPDATE Vulling SET vulling_prijs = @0, smaak = @1 WHERE vulling_id = @2", wijzigprijs, wijzigsmaak, vulling_id);
-                                        if(succesa == 1)
+                                        if(String.IsNullOrEmpty(wijzigprijs) || String.IsNullOrEmpty(wijzigsmaak))
                                         {
-                                            <h4 style="text -align:center; color:green;">Succesvol nieuwe vulling toegevoegd!</h4>
-                                             Response.Redirect("~/User.cshtml");
+                                            <h4 style="text-align:center; color:red;">Niet alle vakken zijn volledig ingevuld, probeer het opnieuw!</h4>
+                                        }
+                                        else
+                                        {
+                                            var succesa = db.Execute(@"UPDATE Vulling SET vulling_prijs = @0, smaak = @1 WHERE vulling_id = @2", wijzigprijs, wijzigsmaak, vulling_id);
+                                            if(succesa == 1)
+                                            {
+                                                Response.Redirect("~/User.cshtml");
                                             }
                                             else
                                             {
-                                                <h4 style="text-align:center; color:red;">Nieuwe vulling toevoegen mislukt, probeer het opnieuw!</h4>
+                                                <h4 style="text-align:center; color:red;">Vulling wijzigen  mislukt, probeer het opnieuw!</h4>
                                                 @vulling_id
                                             }
+                                        }
                                     }
                                 }
                             }
@@ -155,7 +158,7 @@
             <br />
             <div class="card">
                 <div class="card-body" style="text-align:center; background-color:#F8F8F8" ;>klik hier om lagen te updaten!</div>
-                <button type="submit" class="btn1" name="updatelaag" value="laag">Update</button>
+                <button type="button" class="btn1" name="updatelaag" value="laag">Update</button>
             </div>
             <br />
             <div class="card">

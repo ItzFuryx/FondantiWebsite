@@ -13,71 +13,95 @@ function setupMakeCake() {
     this.numberOfPersons = 0;
 
     //Set global values of all steps
+    //Thema
     this.titleStep1 = "Kies een thema";
     this.valuesStep1 = ["Verjaardag volwassene", "Bruiloft", "Verjaardag kind"];
 
+    //Number of persons
     this.titleStep2 = "Selecteer het aantal personen";
-    this.valuesStep2 = ["5", "10", "15"];
 
+    //Cake type
     this.titleStep3 = "Kies een type cake";
     this.valuesStep3 = ["Chocolate", "Red velvet", "Biscuitdeeg"];
 
+    //Number of layers (max number of layers is 15 / number of persons)
     this.titleStep4 = "Kies het aantal lagen";
 
+    //Coating
     this.titleStep5 = "Kies een bekleding";
+    this.valuesStep5 = ["Fondant", "Marsepein", "Beide"];
+
+    //Fill
+    this.titleStep6 = "Kies een vulling";
+    this.valuesStep6 = ["Champagneroom met verse frambozen ", "Gele room met Oreo vulling", "Kindervulling (vruchten compote en room)"];
+
+
 
     //Voor prijzen ophalen maak een page aan, send een get request en handel die dynamisch af, .response() in een var zetten
         
-    //Set cakeMaker ready for step 1
+    //Set cakeMaker ready for first step
     this.setStepInfo();
 }
 
 function setStepInfo() {
-    var stepTitle = "";
-    var stepArray = "";
-    var optionsCount = 0;
-    var boolAndersNamelijk = 0;
+    this.stepTitle = "";
+    this.stepArray = "";
+    this.optionsCount = 0;
+    this.boolAndersNamelijk = 0;
 
     //Get values according to the step
     switch (this.step) {
         case 1:
-            stepTitle = this.titleStep1;
-            stepArray = this.valuesStep1;
-            boolAndersNamelijk = 1;
+            this.stepTitle = this.titleStep1;
+            this.stepArray = this.valuesStep1;
+            this.boolAndersNamelijk = 1;
             break;
         case 2:
-            stepTitle = this.titleStep2;
-            stepArray = this.valuesStep2;
+            this.stepTitle = this.titleStep2;
+            this.stepArray = this.valuesStep2;
             break;
         case 3:
-            stepTitle = this.titleStep3;
-            stepArray = this.valuesStep3;
+            this.stepTitle = this.titleStep3;
+            this.stepArray = this.valuesStep3;
             break;
         case 4:
-            stepTitle = this.titleStep4;
-            stepArray = "";
+            this.stepTitle = this.titleStep4;
+            this.stepArray = "";
+            break;
+        case 5:
+            this.stepTitle = this.titleStep5;
+            this.stepArray = this.valuesStep5;
+            break;
+        case 6:
+            this.stepTitle = this.titleStep6;
+            this.stepArray = this.valuesStep6;
             break;
         default:
-            stepTitle = this.titleStep1;
-            stepArray = this.valuesStep1;
-            boolAndersNamelijk = 1;
+            this.stepTitle = this.titleStep1;
+            this.stepArray = this.valuesStep1;
+            this.boolAndersNamelijk = 1;
             break;
     }
 
+    this.placeStepInfo();
+}
+
+function placeStepInfo() {
     //Set step info
     this.$makeCake.find("#makeCakeStep").html("Stap " + this.step);
-    this.$makeCake.find("#makeCakeStepInfo").html(stepTitle);
-    if (stepArray !== "" && stepArray != "undefined" && typeof stepArray !== "undefined") {
-        var optionsHtml = "";
-        var buttonOptionsHtml = "";
+    this.$makeCake.find("#makeCakeStepInfo").html(this.stepTitle);
 
-        stepArray.forEach(function (value) {
+    var optionsHtml = "";
+    var buttonOptionsHtml = "";
+
+    if (this.step !== 2 && this.step !== 4 && this.step !== 6) {
+        this.stepArray.forEach(function (value) {
             optionsCount++;
             optionsHtml += '<div class="col">' + value + '</div>';
             buttonOptionsHtml += '<div class="col"><input type="radio" name="options" value="' + value + '" class="optionRadios"></div>';
         });
 
-        if (boolAndersNamelijk === 1) {
+        if (this.boolAndersNamelijk === 1) {
             optionsCount++;
             optionsHtml += '<div class="col">Anders, namelijk...</div>';
             buttonOptionsHtml += '<div class="col"><input type="text" name="options" class="w-75 optionText"></div>';
@@ -87,33 +111,84 @@ function setStepInfo() {
         this.$makeCake.find("#optionsMakeCake").html(optionsHtml);
         //Set options slider
         this.$makeCake.find("#chooseOptionMakeCake").html(buttonOptionsHtml);
+
+    } else if (this.step === 2) {
+        //Step 2
+        optionsHtml += '<div class="col"><input type="number" min="1" class="text-center mb-2 optionNumber"></div>';
+        //Set options text
+        this.$makeCake.find("#optionsMakeCake").html(optionsHtml);
+
+    } else if (this.step === 4) {
+        //Step 4
+        max = Math.ceil(chosenOptions[1] / 15);
+        if (max > 10) {
+            max = 10;
+        }
+
+        optionsHtml += '<div class="col"><input type="number" min="1" max="' + max + '" class="text-center mb-2 optionNumber"></div>';
+        if (max === 1) {
+            buttonOptionsHtml += '<div class="col text-center mb-2">Maximaal 1 laag (Minder dan 16 personen)</div>';
+        } else {
+            buttonOptionsHtml += '<div class="col text-center mb-2">Minimaal 1, maximaal ' + max + ' lagen</div>';
+        }
+        //Set options text
+        this.$makeCake.find("#optionsMakeCake").html(optionsHtml);
+        //Set options slider
+        this.$makeCake.find("#chooseOptionMakeCake").html(buttonOptionsHtml);
+
+    } else if (this.step === 6) {
+        //Step 6
+        for (i = 0; i < chosenOptions[3]; i++) {
+            stepArray.forEach(function (value) {
+                optionsCount++;
+                optionsHtml += '<div class="col-12 col-sm-4">Laag ' + (i+1) + '<br>' + value + '<br> <input type="radio" name="options' + i + '" value="' + value + '" class="optionRadios"></div>';
+            });
+        }
+
+        //Set options text
+        this.$makeCake.find("#optionsMakeCake").html(optionsHtml);
+        //Set options slider
+        //this.$makeCake.find("#chooseOptionMakeCake").html(buttonOptionsHtml);
     }
 }
 
 function getOptionValue() {
-    var radios = this.$makeCake.find(".optionRadios");
-    var foundValue = 0;
+    if (this.step !== 2 && this.step !== 4 && this.step !== 6) {
+        var radios = this.$makeCake.find(".optionRadios");
+        var foundValue = 0;
 
-    //Loop through radiobuttons
-    for (var i = 0; i < radios.length; i++)
-    {
-        if (radios[i].checked) {
-            foundValue = 1;
-            this.chosenOptions.push(radios[i].value); 
-            break;
-        }
-    }
 
-    //Check if textbox is set
-    if (foundValue === 0) {
+        //Get value from textbox
         andersNamelijk = "";
-        andersNamelijk = this.$makeCake.find(".optionText").value;
+        andersNamelijk = this.$makeCake.find(".optionText").val();
 
-        if (typeof text !== "undefined" && text !== "") {
+        if (typeof andersNamelijk !== "undefined" && andersNamelijk !== "") {
             foundValue = 1;
-            console.log(andersNamelijk);
             this.chosenOptions.push(andersNamelijk);
         }
+
+        //If value from textbox is empty
+        if (foundValue === 0) {
+            //Loop through radiobuttons
+            for (var i = 0; i < radios.length; i++) {
+                if (radios[i].checked) {
+                    foundValue = 1;
+                    this.chosenOptions.push(radios[i].value);
+                    break;
+                }
+            }
+        }
+    } else if (this.step === 2 || this.step === 4) {
+        //Step 2 and 4 userinput is a number
+        number = this.$makeCake.find(".optionNumber").val();
+
+        if (typeof number !== "undefined" && !isNaN(parseFloat(number)) && isFinite(number)) {
+            foundValue = 1;
+            this.chosenOptions.push(number);
+        }
+    } else if (this.step === 6) {
+        //Step 6 get value for multiple layers)
+
     }
 
     if (foundValue === 1) {
@@ -126,15 +201,15 @@ function getOptionValue() {
 }
 
 function clearCurrentStep() {
-    this.$makeCake.find("#optionsMakeCake").children().fadeOut(500);
-    this.$makeCake.find("#chooseOptionMakeCake").children().fadeOut(500);
-    this.$makeCake.find("#makeCakeStepInfo").fadeOut(500);
-    this.$makeCake.find("#makeCakeStep").fadeOut(500);
+    this.$makeCake.find("#optionsMakeCake").children().fadeOut(250);
+    this.$makeCake.find("#chooseOptionMakeCake").children().fadeOut(250);
+    this.$makeCake.find("#makeCakeStepInfo").fadeOut(250);
+    this.$makeCake.find("#makeCakeStep").fadeOut(250);
     this.$makeCake.find("#optionsMakeCake").children().remove();
     this.$makeCake.find("#chooseOptionMakeCake").children().remove();
     this.step++;
-    setTimeout(this.setStepInfo, 500);
-    setTimeout(this.fadeInNewStep, 550);
+    setTimeout(this.setStepInfo, 250);
+    setTimeout(this.fadeInNewStep, 250);
 }
 
 function fadeInNewStep() {

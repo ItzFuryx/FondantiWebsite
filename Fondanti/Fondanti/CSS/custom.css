@@ -52,6 +52,12 @@
     border: 2px solid #ff1a1a;
     border-radius: 5px;
 }
+/* Make cake section */
+#section-cake {
+    padding: 50px 0;
+}
+
+/* Galery slider */
 @media (min-width: 768px) {
     /* show 3 items */
     .carousel-inner .active, .carousel-inner .active + .carousel-item, .carousel-inner .active + .carousel-item + .carousel-item {

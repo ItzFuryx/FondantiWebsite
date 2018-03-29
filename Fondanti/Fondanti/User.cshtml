@@ -308,21 +308,21 @@
                                                 }
                                                 if (Session[table] == "true")
                                                 {
-                                <button type="submit" class="btn btn-outline-danger waves-effect" name="@close" value="true">Sluit @table</button>
-                                if (IsPost && Request[close] == "true")
-                                {
-                                    Session[table] = null;
-                                    Response.Redirect("~/User.cshtml");
-                                }
-                            }
-                            else
-                            {
-                                <button type="submit" class="btn btn-outline-success waves-effect" name="@count" value="true">Update @table</button>
-                                if (IsPost && Request[Convert.ToString(count)] == "true")
-                                {
-                                    Session[table] = "true";
-                                    Response.Redirect("~/User.cshtml");
-                                }
+                                                    <button type="submit" class="btn btn-secondary active" name="@close" value="true">Sluit @table</button><nsdap />
+                                                    if (IsPost && Request[close] == "true")
+                                                    {
+                                                        Session[table] = null;
+                                                        Response.Redirect("~/User.cshtml");
+                                                    }
+                                                }
+                                                else
+                                                {
+                                                    <button type="submit" class="btn btn-secondary active" name="@count" value="true">Update @table</button><nsdap />
+                                                if (IsPost && Request[Convert.ToString(count)] == "true")
+                                                {
+                                                    Session[table] = "true";
+                                                    Response.Redirect("~/User.cshtml");
+                                                }
                             }
                         } 
                     }

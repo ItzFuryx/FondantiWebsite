@@ -1,19 +1,66 @@
-﻿@{
-//Set database connectie
+﻿@using WebMatrix.Data
 
-//db = connectie
+@{
 
-/*if (Request.QueryString["tabel"] !== null)
-{
-    string table = Request.QueryString["tabel"];
+    //Database Connection
+    string connectionString = @"Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename=|DataDirectory|\Fondanti.mdf;Integrated Security=True";
+    string provider = "System.Data.SqlClient";
+    Database db = Database.OpenConnectionString(connectionString, provider);
 
-    var inhoud = db.Query(@"select naam, prijs FROM " + table + "");
-    foreach (var row in inhoud)
+    string table = "";
+    string naam = "";
+    string prijs = "";
+
+    if (Request.QueryString["table"] != null)
     {
-        response.write(row[naam] + "," + row[priks);
+        string count = Request.QueryString["table"];
+
+        if (count == "0")
+        {
+            table = "Vulling";
+            naam = "smaak";
+            prijs = "vulling_prijs";
+        }
+        else if (count == "1")
+        {
+            table = "Thema";
+            naam = "thema";
+            prijs = null;
+        }
+        else if (count == "2")
+        {
+            table = "Laag";
+            naam = "smaak";
+            prijs = "laag_prijs";
+        }
+        else if (count == "3")
+        {
+            table = "Bekleding";
+            naam = "bekleding";
+            prijs = "bekleding_prijs";
+        }
+        else if (count == "4")
+        {
+            table = "Allergieën";
+            naam = "allergieën";
+            prijs = null;
+        }
+
+        if(prijs != null)
+        {
+            var inhoud = db.Query(@"select " + naam + ", " + prijs + " FROM " + table + "");
+            foreach (var row in inhoud)
+            {
+                Response.Write(row.naam + "," + row[prijs] + "|");
+            }
+        }
+        else
+        {
+            var inhoud = db.Query(@"select " + naam + " FROM " + table + "");
+            foreach (var row in inhoud)
+            {
+                Response.Write(row.naam + "|");
+            }
+        }
     }
-
-)
-*/
-
-}
+        }

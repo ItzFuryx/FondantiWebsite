@@ -2,6 +2,7 @@
 function setupMakeCake() {
     //Set empty array for chosen option
     this.chosenOptions = [];
+    this.step6ChosenOptions = [];
 
     //Global step, keeps count on which step the user is
     this.step = 1;
@@ -187,8 +188,19 @@ function getOptionValue() {
             this.chosenOptions.push(number);
         }
     } else if (this.step === 6) {
-        //Step 6 get value for multiple layers)
+        //Step 6 get value for multiple layers
+        var radiosCount = 0;
+        for (i = 0; i < chosenOptions[3]; i++) {
+            var radio = this.$makeCake.find(".optionRadios" + i);
 
+            if (typeof radio !== "undefined") {
+                this.step6ChosenOptions.push(radio.val());
+            }
+        }
+
+        if (chosenOptions[3] === this.step6ChosenOptions.length) {
+            foundValue = 1;
+        }
     }
 
     if (foundValue === 1) {

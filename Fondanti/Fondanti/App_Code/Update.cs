@@ -17,8 +17,6 @@ public class Update
         string provider = "System.Data.SqlClient";
         this.db = Database.OpenConnectionString(connectionString, provider);
     }
-
-
     public bool Toevoegen(string nieuwitem, string nieuwprijs, string nieuwallergie, string table, string a, string b, string c, string d)
     {
         if(String.IsNullOrEmpty(nieuwprijs) && table == "Allergieën" || String.IsNullOrEmpty(nieuwprijs) && table == "Thema")
@@ -93,7 +91,7 @@ public class Update
 
     public bool WijzigItem(string  wijzigid, string wijzigprijs, string wijzigallergie, string wijzigitem, string table, string a, string b, string c, string d)
     {
-        if(String.IsNullOrEmpty(wijzigprijs) && table == "Allergieën" || String.IsNullOrEmpty(wijzigprijs) && table == "Thema")
+        if(table == "Allergieën" || table == "Thema")
         {
             var succesa = db.Execute(@"UPDATE " + table + " SET " + b + " = @0 WHERE " + a + " = @1", wijzigitem, wijzigid);
             if (succesa == 1)
@@ -123,12 +121,8 @@ public class Update
         }
         else
         {
-            var succes = db.Query(@"SELECT allergieën_id FROM " + table + " WHERE Allergieën.allergieën = @0", wijzigallergie);
-            //foreach (var rows in succes)
-            //{
-            //    wijzigallergie = rows.allergieën_id;
-            //}
-            var succesa = db.Execute(@"UPDATE " + table + " SET " + c + " = @0, " + b + " = @1, " + d + " = @2 WHERE " + a + " = @3", wijzigprijs, wijzigitem, wijzigallergie, wijzigid);
+            var lol = this.db.QuerySingle(@"SELECT allergieën_id FROM Allergieën WHERE allergieën = @0", wijzigallergie);
+            var succesa = db.Execute(@"UPDATE " + table + " SET " + c + " = @0, " + b + " = @1, " + d + " = @2 WHERE " + a + " = @3", wijzigprijs, wijzigitem, lol[0], wijzigid);
             if (succesa == 1)
             {
                 return true;
@@ -138,7 +132,7 @@ public class Update
                 return false;
             }
         }
-
+        return false;
     }
 
 

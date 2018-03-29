@@ -10,6 +10,11 @@
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Courgette">
     <link rel="stylesheet" href="~/CSS/custom.css">
 
+    <!-- JS -->
+    <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+
     <title>@Page.Title</title>
     @RenderSection("head", required: false)
 </head>
@@ -37,9 +42,7 @@
     </footer>
 
     <!-- JS -->
-    <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+    <script src="~/JS/custom.js"></script>
     <script src="~/JS/makeCake.js"></script>
     <script>
         //Initialize and set a few watchers
@@ -49,6 +52,5 @@
             getOptionValue();
         });
     </script>
-    <script src="~/JS/custom.js"></script>
 </body>
 </html>

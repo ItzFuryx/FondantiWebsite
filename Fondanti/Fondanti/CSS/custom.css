@@ -37,19 +37,9 @@
     border: 5px #a7cdf2 !important;
     border-style: solid !important;
 }
-.btnupdate {
-    background-color: #C5FECD;
-    border: 2px solid #4CAF50;
-    border-radius: 5px;
-}
 .btnchange {
     background-color: #A7CDF2;
     border: 2px solid #1A7BBF;
-    border-radius: 5px;
-}
-.btnremove {
-    background-color: #ff8080;
-    border: 2px solid #ff1a1a;
     border-radius: 5px;
 }
 /* Make cake section */

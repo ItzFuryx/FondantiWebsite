@@ -15,7 +15,7 @@
     Layout = "~/_Layout.cshtml";
     //Layout = "Your Layout Page goes here";
 
-    
+
 }
 <!DOCTYPE html>
 <html>
@@ -24,158 +24,305 @@
 </head>
 <body>
     <h1 style="text-align:center">Succesvol Ingelogt, @Session["userame"]</h1>
+    <h4 style="text-align:center; color:red">@Session["foutmelding"]</h4>
+    @{
+        if (Session["foutmelding"] != null)
+        {
+            Session["foutmelding"] = null;
+        }
+    }
+
     <br />
     <form method="POST">
-        <div class="container">
-            <div class="card">
-                <div class="card-body" style="text-align:center; background-color:#F8F8F8" ;>Vullingen
-                    <table class="table">
-                            @{ 
-                                if(Session["updatevulling"] == "true" && Validation.IsValid())
+        <div class="container" style="text-align:center;">
+            <div class="card-body">
+                <table class="table">
+                    @{
+                        string table = "";
+                        string a = "";
+                        string b = "";
+                        string c = "";
+                        string d = "";
+                        string close = "";
+                        for (int count = 0; count < 6; count++)
+                        {
+                            if (count == 0)
+                            {
+                                table = "Vulling";
+                                close = "closevulling";
+                                a = "vulling_id";
+                                b = "smaak";
+                                c = "vulling_prijs";
+                                d = "allergieën_id";
+                            }
+                            else if (count == 1)
+                            {
+                                table = "Thema";
+                                close = "closethema";
+                                a = "thema_id";
+                                b = "thema";
+                                c = null;
+                                d = null;
+                            }
+                            else if (count == 2)
+                            {
+                                table = "Laag";
+                                close = "closelaag";
+                                a = "laag_id";
+                                b = "smaak";
+                                c = "laag_prijs";
+                                d = "allergieën_id";
+                            }
+                            else if (count == 3)
+                            {
+                                table = "Decoratie";
+                                close = "closedecoratie";
+                                a = "decoratie_id";
+                                b = "niveau_decoratie";
+                                c = "decoratie_prijs";
+                                d = null;
+                            }
+                            else if (count == 4)
+                            {
+                                table = "Bekleding";
+                                close = "closebekleding";
+                                a = "bekleding_id";
+                                b = "bekleding";
+                                c = "bekleding_prijs";
+                                d = "allergieën_id";
+                            }
+                            else if (count == 5)
+                            {
+                                table = "Allergieën";
+                                close = "closeallergieën";
+                                a = "allergieën_id";
+                                b = "allergieën";
+                                c = null;
+                                d = null;
+                            }
+                            if (Session[table] == "true" && Validation.IsValid())
+                            {
+                                <thead class="thead-light">
+                                    <tr>
+                                        <th>@b</th>
+                                        <th>@c</th>
+                                        @{if (d != null){<th>Allergie</th>}}
+                                        <th>Wijzigen</th>
+                                        <th>Verwijderen</th>
+                                    </tr>
+                                </thead>
+                                var inhoud = db.Query(@"select * FROM " + table + "");
+                                foreach (var row in inhoud)
                                 {
-                                    <thead class="thead-light">
-                                        <tr>
-                                            <th>Smaak</th>
-                                            <th>Prijs</th>
-                                            <th>Wijzigen</th>
-                                            <th>Verwijderen</th>
-                                        </tr>
-                                    </thead>
-                                    var vulling = db.Query(@"select * FROM Vulling");
-                                    foreach (var row in vulling)
+                                    bool geenallergie = false;
+                                    if (table == "Allergieën" && row.allergieën == "Geen Allergie")
                                     {
-                                        <tr>
-                                            <td>@row.smaak</td>
-                                            <td>@row.vulling_prijs</td>
-                                            <td><button type="submit" class="btnchange" name="wijzigen" value="@row.vulling_id">Wijzigen</button></td>
-                                            <td><button type="submit" class="btnremove" name="verwijderen" value="@row.vulling_id">Verwijderen</button></td>
-                                        </tr>
+                                        geenallergie = true;
                                     }
-                                        <tr>
-                                            <td>
-                                                <input type="text" class="form-control" name="nieuwe_smaak" placeholder="Smaak" style="text-align:center" />
-                                            </td>
-                                            <td>
-                                                <input type="text" class="form-control" name="nieuwe_vulling_prijs" placeholder="Prijs" style="text-align:center" />
-                                            </td>
-                                            <td><button type="submit" class="btnupdate" name="toevoegen" value="true">Toevoegen</button></td>
-                                        </tr>
-                                    if(IsPost && Request["toevoegen"] == "true")
-                                    {
-                                        var nieuwesmaak = Request["nieuwe_smaak"];
-                                        var nieuwevullingprijs = Request["nieuwe_vulling_prijs"];
-                                        if(String.IsNullOrEmpty(nieuwesmaak) || String.IsNullOrEmpty(nieuwevullingprijs))
-                                        {
-                                            <h4 style="text-align:center; color:red;">Niet alle vakken zijn volledig ingevuld, probeer het opnieuw!</h4>
-                                        }
-                                        else
-                                        {
-                                            var succes = db.Execute(@"INSERT INTO Vulling (smaak, vulling_prijs) VALUES (@0, @1)", nieuwesmaak, nieuwevullingprijs);
-                                            if(succes == 1)
+                                    <tr>
+                                    <td>@row[b]</td>
+                                        @{ 
+                                            if (c != null){<td>@row[c]</td>}
+                                            else
                                             {
-                                                Response.Redirect("~/User.cshtml");
+                                                <td></td>
+                                            }
+                                            if (d != null)
+                                            {
+                                                string All = Convert.ToString(row[d]);
+                                                var succes = db.Query(@"SELECT allergieën FROM Allergieën WHERE Allergieën.allergieën_id = @0", All);
+                                                foreach (var rows in succes)
+                                                {
+                                                    <td>@rows.allergieën</td>
+                                                }
+                                            }
+                                            if (geenallergie == true)
+                                            {
+                                                <td><button type="submit" class="btn btn-outline-primary waves-effect" name="wijzigen" value="@row[a]" disabled>Wijzigen</button></td>
+                                                <td><button type="submit" class="btn btn-outline-danger waves-effect" name="verwijderen" value="@row[a]" disabled>Verwijderen</button></td>
                                             }
                                             else
                                             {
-                                                <h4 style="text-align:center; color:red;">Nieuwe vulling toevoegen mislukt, probeer het opnieuw!</h4>
+                                                <td><button type="submit" class="btn btn-outline-primary waves-effect" name="wijzigen" value="@row[a]">Wijzigen</button></td>
+                                                <td><button type="submit" class="btn btn-outline-danger waves-effect" name="verwijderen" value="@row[a]">Verwijderen</button></td>
                                             }
                                         }
+                                    </tr>
+                                }
+                                <tr>
+                                    <td><input type="text" class="form-control" name="nieuwitem" placeholder="@b" style="text-align:center" /></td>
+                                    @{
+                                        if (c != null)
+                                        {
+                                            <td><input type="text" class="form-control" name="nieuwprijs" placeholder="@c" style="text-align:center" /></td>
+                                        }
+                                        if (d != null)
+                                        {
+                                            var succes = db.Query(@"SELECT allergieën FROM Allergieën");
+                                            <td>
+                                                <select class="form-control" name="nieuwallergie">
+                                                    @foreach (var row2 in succes)
+                                                    {
+
+                                                        <option>@row2.allergieën</option>
+                                                    }
+                                                </select>
+                                            </td>
+                                        }
                                     }
-                                    else if(IsPost && Request["verwijderen"] != null)
+                                    <td> <button type="submit" class="btn btn-outline-success waves-effect" name="toevoegen" value="true">Toevoegen</button></td>
+                                </tr>
+                                //toevoegen
+                                if (IsPost && Request["toevoegen"] == "true")
+                                {
+                                    Update Update = new Update();
+
+                                    var nieuwitem = Request["nieuwitem"];
+                                    var nieuwprijs = Request["nieuwprijs"];
+                                    var nieuwallergie = Request["nieuwallergie"];
+                                    if (nieuwprijs == null && table == "Allergieën" || nieuwprijs == null && table == "Thema")
                                     {
-                                        var vulling_id = Request["verwijderen"];
-                                        var succes = db.Execute(@"DELETE FROM Vulling WHERE vulling_id = @0", vulling_id);
-                                        if(succes == 1)
+                                        if (Update.Toevoegen(nieuwitem, nieuwprijs, nieuwallergie, table, a, b, c, d))
                                         {
                                             Response.Redirect("~/User.cshtml");
                                         }
                                         else
                                         {
-                                             <h4 style="text-align:center; color:red;">Vulling verwijderen is mislukt, probeer het opnieuw!</h4>
+                                            Session["foutmelding"] = "Toevoegen niet gelukt, probeer het opnieuw";
                                         }
                                     }
-                                    else if(IsPost && Request["wijzigen"] != null)
+                                    else
                                     {
-                                        var vulling_id = Request["wijzigen"];
-                                        var succes = db.Query(@"SELECT * FROM Vulling WHERE vulling_id=@0", vulling_id);
-                                        foreach(var row in succes)
+                                        bool iAllNumbers = nieuwprijs.ToCharArray().All(ch => Char.IsDigit(ch) || ch == '.');
+                                        if (iAllNumbers)
                                         {
-                                             <tr>
-                                                 <td><input type="text" class="form-control" name="wijzigsmaak" value="@row.smaak" style="text-align:center" /></td>
-                                                 <td><input type="text" class="form-control" name="wijzigprijs" value="@row.vulling_prijs" style="text-align:center" /></td>
-                                                 <td><button type="submit" class="btnchange" name="wijzigitem" value="@row.vulling_id">Wijzigen</button></td>
-                                             </tr>
-                                        }
-                                    }
-                                    else if(IsPost && Request["wijzigitem"] != null)
-                                    {
-                                        var vulling_id = Request["wijzigitem"];
-                                        var wijzigprijs = Request["wijzigprijs"];
-                                        var wijzigsmaak = Request["wijzigsmaak"];
-                                        if(String.IsNullOrEmpty(wijzigprijs) || String.IsNullOrEmpty(wijzigsmaak))
-                                        {
-                                            <h4 style="text-align:center; color:red;">Niet alle vakken zijn volledig ingevuld, probeer het opnieuw!</h4>
-                                        }
-                                        else
-                                        {
-                                            var succesa = db.Execute(@"UPDATE Vulling SET vulling_prijs = @0, smaak = @1 WHERE vulling_id = @2", wijzigprijs, wijzigsmaak, vulling_id);
-                                            if(succesa == 1)
+                                            if (Update.Toevoegen(nieuwitem, nieuwprijs, nieuwallergie, table, a, b, c, d))
                                             {
                                                 Response.Redirect("~/User.cshtml");
                                             }
                                             else
                                             {
-                                                <h4 style="text-align:center; color:red;">Vulling wijzigen  mislukt, probeer het opnieuw!</h4>
-                                                @vulling_id
+                                                Session["foutmelding"] = "Toevoegen niet gelukt, probeer het opnieuw!";
+                                            }
+                                        }
+                                        else
+                                        {
+                                            Session["foutmelding"] = "Geen geldig bedrag, probeer het opnieuw!";
+                                        }
+                                    }
+
+                                }
+                                //verwijderen
+                                else if (IsPost && Request["verwijderen"] != null)
+                                {
+                                    Update Update = new Update();
+                                    var id = Request["verwijderen"];
+                                    if (Update.Verwijderen(id, table, a, b, c, d))
+                                    {
+                                        Response.Redirect("~/User.cshtml");
+                                    }
+                                    else
+                                    {
+                                        Session["foutmelding"] = "Verwijderen mislukt!";
+                                    }
+                                }
+                                //wijzigen
+                                else if (IsPost && Request["wijzigen"] != null)
+                                {
+                                    Update Update = new Update();
+                                    var id = Request["wijzigen"];
+                                    var succes = db.Query(@"SELECT * FROM " + table + " WHERE " + a + "=@0", id);
+                                    foreach (var row in succes)
+                                    {
+                                        <tr>
+                                            <td><input type="text" class="form-control" name="wijzigitem" value="@row[b]" style="text-align:center" /></td>
+                                            @{ 
+                                                if (c != null)
+                                                {
+                                                    <td><input type="text" class="form-control" name="wijzigprijs" value="@row[c]" style="text-align:center" /></td>
+                                                }
+                                                if (d != null)
+                                                {
+                                                    var ChangeAll = db.Query(@"SELECT allergieën FROM Allergieën");
+                                                    <td>
+                                                        <select class="form-control" name="wijzigallergie">
+                                                            @foreach (var row2 in ChangeAll)
+                                                            {
+                                                                <option>@row2.allergieën</option>
+                                                            }
+                                                        </select>
+                                                    </td>
+                                                }
+                                            }
+                                            <td><button type="submit" class="btn btn-outline-primary waves-effect" name="wijzigid" value="@row[a]">Wijzigen</button></td>
+                                        </tr>
+                                    }
+                                }
+                                //wijzigitem
+                                else if (IsPost && Request["wijzigitem"] != null)
+                                {
+                                    Update Update = new Update();
+                                    var wijzigid = Request["wijzigid"];
+                                    var wijzigprijs = Request["wijzigprijs"];
+                                    var wijzigitem = Request["wijzigitem"];
+                                    var wijzigallergie = Request["wijzigallergie"];        
+                                    if (wijzigprijs != null)
+                                    {
+                                        bool iAllNumbers = wijzigprijs.ToCharArray().All(ch => Char.IsDigit(ch) || ch == '.');
+                                        if (iAllNumbers)
+                                        {
+                                            if (Update.WijzigItem(wijzigid, wijzigprijs, wijzigallergie, wijzigitem, table, a, b, c, d))
+                                            {
+                                                Response.Redirect("~/User.cshtml");
+                                            }
+                                            else
+                                            {
+                                                Session["foutmelding"] = "Wijzigen mislukt!";
                                             }
                                         }
                                     }
+                                    else if (wijzigprijs == null && table == "Allergieën" || wijzigprijs == null && table == "Thema")
+                                    {
+                                        if (Update.WijzigItem(wijzigid, wijzigprijs, wijzigallergie, wijzigitem, table, a, b, c, d))
+                                        {
+                                            Response.Redirect("~/User.cshtml");
+                                        }
+                                        else
+                                        {
+                                            Session["foutmelding"] = "Wijzigen mislukt!";
+                                        }
+                                    }
+                                    else
+                                    {
+                                        Session["foutmelding"] = "Geen geldig bedrag, probeer het opnieuw!";
+                                    }
                                 }
                             }
-                         </table>
-                     </div>
-                @{ 
-                    if(Session["updatevulling"] == "true")
-                    {
-                        <button type="submit" class="btnremove" name="closeupdatevulling" value="true">Sluiten</button>
-                        if(IsPost && Request["closeupdatevulling"] == "true")
-                        {
-                            Session["updatevulling"] = null;
-                            Response.Redirect("~/User.cshtml");
-                        }
+                            if (Session[table] == "true")
+                            {
+                                <button type="submit" class="btn btn-outline-danger waves-effect" name="@close" value="true">Sluit @table</button>
+                                if (IsPost && Request[close] == "true")
+                                {
+                                    Session[table] = null;
+                                    Response.Redirect("~/User.cshtml");
+                                }
+                            }
+                            else
+                            {
+                                <button type="submit" class="btn btn-outline-success waves-effect" name="@count" value="true">Update @table</button>
+                                if (IsPost && Request[Convert.ToString(count)] == "true")
+                                {
+                                    Session[table] = "true";
+                                    Response.Redirect("~/User.cshtml");
+                                }
+                            }
+                        } 
                     }
-                    else
-                    {
-                        <button type="submit" class="btnupdate" name="updatevulling" value="true">Update</button>
-                        Session["updatevulling"] = "true";
-                    }
-
-                }
-                 
+                </table>
             </div>
 
-
-            <br />
-            <div class="card">
-                <div class="card-body" style="text-align:center; background-color:#F8F8F8" ;>klik hier om lagen te updaten!</div>
-                <button type="button" class="btn1" name="updatelaag" value="laag">Update</button>
-            </div>
-            <br />
-            <div class="card">
-                <div class="card-body" style="text-align:center; background-color:#F8F8F8" ;>klik hier om smaken te updaten!</div>
-                <button type="button" class="btn1">Update</button>
-            </div>
-            <br />
-            <div class="card">
-                <div class="card-body" style="text-align:center; background-color:#F8F8F8" ;>klik hier om smaken te updaten!</div>
-                <button type="button" class="btn1">Update</button>
-            </div>
-            <br />
-            <div class="card">
-                <div class="card-body" style="text-align:center; background-color:#F8F8F8" ;>klik hier om smaken te updaten!</div>
-                <button type="button" class="btn1">Update</button>
-            </div>
         </div>
+        <br />
     </form>
 </body>
 </html>

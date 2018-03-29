@@ -51,7 +51,7 @@
             var inhoud = db.Query(@"select " + naam + ", " + prijs + " FROM " + table + "");
             foreach (var row in inhoud)
             {
-                Response.Write(row.naam + "," + row[prijs] + "|");
+                Response.Write(row[naam] + "," + row[prijs] + "|");
             }
         }
         else
@@ -59,7 +59,7 @@
             var inhoud = db.Query(@"select " + naam + " FROM " + table + "");
             foreach (var row in inhoud)
             {
-                Response.Write(row.naam + "|");
+                Response.Write(row[naam] + "|");
             }
         }
     }

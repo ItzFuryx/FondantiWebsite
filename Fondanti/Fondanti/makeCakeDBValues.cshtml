@@ -45,8 +45,14 @@
             naam = "allergieën";
             prijs = null;
         }
+        else if (count == "5")
+        {
+            table = "Decoratie";
+            naam = "niveau_decoratie";
+            prijs = "decoratie_prijs";
+        }
 
-        if(prijs != null)
+        if (prijs != null)
         {
             var inhoud = db.Query(@"select " + naam + ", " + prijs + " FROM " + table + "");
             foreach (var row in inhoud)

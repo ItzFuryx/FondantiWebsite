@@ -6,6 +6,7 @@
     this.chosenOptionsPrices = [];
     this.step6ChosenOptions = [];
     this.totalPrice = 0;
+    this.editedChosenOptions = 0;
 
     //Global step, keeps count on which step the user is
     this.step = 1;
@@ -123,6 +124,18 @@
     this.titleStep8 = "Kies het niveau van decoratie";
     this.valuesStep8 = ["Eenvoudig", "Gemiddeld", "Uitgebreid"];
     this.pricesStep8 = [1, 2, 3];
+    $.ajax({
+        url: "../makeCakeDBValues.cshtml?table=5"
+    }).done(function (response) {
+        decoraties = response.split("|");
+        decoraties.forEach(function (decoratie) {
+            priceDecoratie = response.split(",");
+            makeCake.pricesStep8[priceDecoratie[0] - 1] = priceDecoratie[1];
+        });
+
+        //Remove last value from array (empty value) and call function setStepInfo
+        makeCake.pricesStep8.pop();
+    });
 
     //Cake ready on date
     this.titleStep9 = "De taart moet klaar zijn op:";
@@ -419,7 +432,7 @@ function updateTotalPrice(number) {
     if (this.step === 8) {
         this.chosenOptionsPrices[7] = number;
     } else {
-        this.chosenOptionsPrices[this.step] = number;
+        this.chosenOptionsPrices[this.step - 1] = number;
     }
     
     this.totalPrice = this.totalPrice + number;
@@ -430,45 +443,35 @@ function downloadPdf() {
     console.log(this.chosenOptions);
     console.log(this.step6ChosenOptions);
     console.log(this.chosenOptionsPrices);
-    for (i = 0; i < chosenOptions.length; i++) {
-        if (chosenOptionsPrices.hasOwnProperty(i)) {
-            chosenOptions[i] = chosenOptions[i] + "|" + chosenOptionsPrices[i];
-        } else {
-            chosenOptions[i] = chosenOptions[i] + "|0";
-        }
-    }
 
-    /*for (var key in chosenOptionsPrices) {
-        chosenOptions[key] = chosen
-    }*/
+    if (this.editedChosenOptions === 0) {
+        chosenOptions[1] += " personen";
+        chosenOptions[3] += " lagen";
+        for (i = 0; i < chosenOptions.length; i++) {
+            if (chosenOptionsPrices.hasOwnProperty(i)) {
+                chosenOptions[i] = chosenOptions[i] + " | " + chosenOptionsPrices[i];
+            } else {
+                chosenOptions[i] = chosenOptions[i] + " | 0";
+            }
+        }
+        this.editedChosenOptions = 1;
+    }
 
     chosenOptionsString = "chosenOptions=";
     chosenOptions.forEach(function (value) {
         chosenOptionsString += value + ",";
     });
 
-    /*chosenOptionsPricesString = "chosenOptionsPrices=";
+    url = "../downloadPdf.cshtml?" + chosenOptionsString + "&price=" + this.totalPrice;
+    url = url.substring(0, url.length - 1);
 
-    /*
-        console.log("key " + key + " has value " + myArray[key]);
-    }
-    
-        chosenOptionsString += key + "," + chosenOptionsPrices[key] + "|";
-    };*/
+    window.open(url); 
 
-    $.ajax({
+   /*$.ajax({
         url: "../downloadPdf.cshtml?" + chosenOptionsString
     }).done(function (response) {
         console.log(response);
-
-        /*allergieen = response.split("|");
-        allergieen.forEach(function (allergie) {
-            makeCake.valuesStep7.push(allergie);
-        });
-
-        //Remove last value from array (empty value) and call function setStepInfo
-        makeCake.valuesStep7.pop();*/
-    });
+    });*/
 }
 
 $("#makeCakeNextStep").click(function () {

@@ -1,15 +1,31 @@
-﻿@{
+﻿@using System;
+@using System.IO;
+@using System.Collections.Generic;
+@using System.Linq;
+@using System.Web;
+@using System.Web.UI.WebControls;
+@{
     string options = Request.QueryString["chosenOptions"];
+    string totalPrice = Request.QueryString["price"];
 
-    Response.Write(options);
+    //    Response.Write(options);
 
-    List<System.Web.UI.WebControls.ListItem> pdfItems;
+    List<ListItem> pdfItems = new List<ListItem>();
+    /*pdfItems.Add(new ListItem());
+    pdfItems[0].Value = "Test|15";*/
 
     string[] items = options.Split(',');
     foreach (string item in items)
     {
-        //pdfItems.Add(item);
+        ListItem newItem = new ListItem();
+        newItem.Value = item;
+        pdfItems.Add(newItem);
     }
+
+    //Response.Write(pdfItems);
+
+    PDFCreator createPDF = new PDFCreator(pdfItems, totalPrice, Response, Server);
 
 
 }
+<script>//window.close();</script>

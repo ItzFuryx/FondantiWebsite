@@ -72,7 +72,7 @@
         right: -33.3333%;
         z-index: -1;
         display: block;
-        visibility: visible;
+        visibility: hidden;
     }
 
     /* left or forward direction */

@@ -1,0 +1,15 @@
+﻿@{
+    string options = Request.QueryString["chosenOptions"];
+
+    Response.Write(options);
+
+    List<System.Web.UI.WebControls.ListItem> pdfItems;
+
+    string[] items = options.Split(',');
+    foreach (string item in items)
+    {
+        //pdfItems.Add(item);
+    }
+
+
+}

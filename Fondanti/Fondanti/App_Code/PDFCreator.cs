@@ -36,7 +36,16 @@ public class PDFCreator
         foreach (System.Web.UI.WebControls.ListItem item in items)
         {
                 // Each CheckBoxList item has a value of ITEMNAME|ITEM#|QTY, so we split on | and pull these values out...
-                var pieces = item.Value.Split("|".ToCharArray());
+            var pieces = item.Value.Split("|".ToCharArray());
+            if (pieces[1].Contains("0") || pieces[1] == string.Empty)
+            {
+                pieces[1] = "-";
+            }
+            else
+            {
+                pieces[1] = "€" + pieces[1]; 
+            }
+
                 itemsTable += string.Format("<tr><td>{0}</td><td>{1}</td></tr>",
                                             pieces[0], pieces[1]);
             

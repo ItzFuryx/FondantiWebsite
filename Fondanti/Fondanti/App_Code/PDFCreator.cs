@@ -37,6 +37,8 @@ public class PDFCreator
         {
                 // Each CheckBoxList item has a value of ITEMNAME|ITEM#|QTY, so we split on | and pull these values out...
             var pieces = item.Value.Split("|".ToCharArray());
+            if (pieces[0] == string.Empty || pieces[0].Length < 3)
+                continue;
             if (pieces[1].Contains("0") || pieces[1] == string.Empty)
             {
                 pieces[1] = "-";
@@ -46,7 +48,7 @@ public class PDFCreator
                 pieces[1] = "€" + pieces[1]; 
             }
 
-                itemsTable += string.Format("<tr><td>{0}</td><td>{1}</td></tr>",
+            itemsTable += string.Format("<tr><td>{0}</td><td>{1}</td></tr>",
                                             pieces[0], pieces[1]);
             
         }

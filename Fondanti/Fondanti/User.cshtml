@@ -13,9 +13,6 @@
 
     Page.Title = "Fondanti";
     Layout = "~/_Layout.cshtml";
-    //Layout = "Your Layout Page goes here";
-
-
 }
 <!DOCTYPE html>
 <html>
@@ -144,6 +141,11 @@
                                                 <td><button type="submit" class="btn btn-outline-primary waves-effect" name="wijzigen" value="@row[a]" disabled>Wijzigen</button></td>
                                                 <td><button type="submit" class="btn btn-outline-danger waves-effect" name="verwijderen" value="@row[a]" disabled>Verwijderen</button></td>
                                             }
+                                            else if(table == "Decoratie")
+                                            {
+                                                <td><button type="submit" class="btn btn-outline-primary waves-effect" name="wijzigen" value="@row[a]">Wijzigen</button></td>
+                                                <td><button type="submit" class="btn btn-outline-danger waves-effect" name="verwijderen" value="@row[a]" disabled>Verwijderen</button></td>
+                                            }
                                             else
                                             {
                                                 <td><button type="submit" class="btn btn-outline-primary waves-effect" name="wijzigen" value="@row[a]">Wijzigen</button></td>
@@ -252,8 +254,15 @@
                                                 var id = Request["wijzigen"];
                                                 var succes = db.QuerySingle(@"SELECT * FROM " + table + " WHERE " + a + "=@0", id);
                                         <tr>
-                                            
-                                            <td><input type="text" class="form-control" name="wijzigitem" value="@succes[1]" style="text-align:center" /></td>
+                                            @if(table == "Decoratie")
+                                            {
+                                                <td><input type="text" class="form-control" name="wijzigitem" value="@succes[1]" style="text-align:center" readonly/></td>
+                                            }
+                                            else
+                                            {
+                                                 <td><input type="text" class="form-control" name="wijzigitem" value="@succes[1]" style="text-align:center" /></td>
+                                            }
+
                                             @{ 
                                                 if (c != null)
                                                 {

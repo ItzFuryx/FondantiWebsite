@@ -45,7 +45,7 @@
                         string d = "";
                         string e = "";
                         string close = "";
-                        for (int count = 0; count < 5; count++)
+                        for (int count = 0; count < 6; count++)
                         {
                             if (count == 0)
                             {
@@ -90,6 +90,15 @@
                                 a = "allergieën_id";
                                 b = "allergieën";
                                 c = null;
+                                d = null;
+                            }
+                            else if (count == 5)
+                            {
+                                table = "Decoratie";
+                                close = "closedecoratie";
+                                a = "decoratie_id";
+                                b = "niveau_decoratie";
+                                c = "decoratie_prijs";
                                 d = null;
                             }
                             if (Session[table] == "true" && Validation.IsValid())
@@ -144,25 +153,16 @@
                                     </tr>
                                             }
                                 <tr>
-                                    @if (b == "aantal_lagen" || b == "niveau_decoratie")
+                                    @if (b != "niveau_decoratie")
                                     {
-                                            <td>
-                                            <select class="form-control" name="nieuwitem">
-                                            @for (int i = 0; i < 10; i++)
-                                            {
-                                                <option>@i</option>
-                                            }
-                                                </select> </td>
-                                    }
-                                    else
-                                    {
+                                      
                                         <td><input type="text" class="form-control" name="nieuwitem" placeholder="@b" style="text-align:center" /></td>
-                                    }
-                                    @if (c != null)
+                                    
+                                    if (c != null)
                                     {
                                             <td><input type="text" class="form-control" name="nieuwprijs" placeholder="@c" style="text-align:center" /></td>
                                         }
-                                        @if (d != null)
+                                        if (d != null)
                                         {
                                             var succes = db.Query(@"SELECT allergieën FROM Allergieën");
                                             <td>
@@ -176,7 +176,9 @@
                                             </td>
                                         }
                                     <td> <button type="submit" class="btn btn-outline-success waves-effect" name="toevoegen" value="true">Toevoegen</button></td>
+                                    }
                                 </tr>
+
                                             //toevoegen
                                             if (IsPost && Request["toevoegen"] == "true")
                                             {
@@ -223,15 +225,26 @@
                                             {
                                                 Update Update = new Update();
                                                 var id = Request["verwijderen"];
-                                                if (Update.Verwijderen(id, table, a, b, c, d))
+                                                var lol = db.QuerySingle("SELECT allergieën_id AS tableBekledingId FROM Bekleding WHERE allergieën_id = @0 UNION ALL SELECT allergieën_id AS tableVullingId  FROM Vulling WHERE allergieën_id = @1 UNION ALL SELECT allergieën_id AS tableLaagId  FROM Laag WHERE allergieën_id = @2", id, id, id);
+
+                                                if (lol != null)
                                                 {
+                                                    Session["foutmelding"] = "Allergie is momenteel in gebruik!";
                                                     Response.Redirect("~/User.cshtml");
                                                 }
                                                 else
                                                 {
-                                                    Session["foutmelding"] = "Verwijderen mislukt!";
-                                                    Response.Redirect("~/User.cshtml");
+                                                    if (Update.Verwijderen(id, table, a, b, c, d))
+                                                    {
+                                                        Response.Redirect("~/User.cshtml");
+                                                    }
+                                                    else
+                                                    {
+                                                        Session["foutmelding"] = "Verwijderen mislukt!";
+                                                        Response.Redirect("~/User.cshtml");
+                                                    }
                                                 }
+
                                             }
                                             //wijzigen
                                             else if (IsPost && Request["wijzigen"] != null)
@@ -239,7 +252,7 @@
                                                 var id = Request["wijzigen"];
                                                 var succes = db.QuerySingle(@"SELECT * FROM " + table + " WHERE " + a + "=@0", id);
                                         <tr>
-
+                                            
                                             <td><input type="text" class="form-control" name="wijzigitem" value="@succes[1]" style="text-align:center" /></td>
                                             @{ 
                                                 if (c != null)
@@ -308,7 +321,7 @@
                                                 }
                                                 if (Session[table] == "true")
                                                 {
-                                                    <button type="submit" class="btn btn-secondary active" name="@close" value="true">Sluit @table</button><nsdap />
+                                                    <button type="submit" class="btn btn-danger" name="@close" value="true">Sluit @table</button><nsdap />
                                                     if (IsPost && Request[close] == "true")
                                                     {
                                                         Session[table] = null;
@@ -317,18 +330,17 @@
                                                 }
                                                 else
                                                 {
-                                                    <button type="submit" class="btn btn-secondary active" name="@count" value="true">Update @table</button><nsdap />
-                                                if (IsPost && Request[Convert.ToString(count)] == "true")
-                                                {
-                                                    Session[table] = "true";
-                                                    Response.Redirect("~/User.cshtml");
+                                                    <button type="submit" class="btn btn-success" name="@count" value="true">Update @table</button><nsdap />
+                                                        if (IsPost && Request[Convert.ToString(count)] == "true")
+                                                        {
+                                                            Session[table] = "true";
+                                                            Response.Redirect("~/User.cshtml");
+                                                        }
                                                 }
-                            }
-                        } 
+                                                }
                     }
-                </table>
+                </table>           
             </div>
-
         </div>
         <br />
     </form>

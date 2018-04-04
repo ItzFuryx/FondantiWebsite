@@ -77,9 +77,8 @@ public class Update
 
     public bool Verwijderen(string id, string table, string a, string b, string c, string d)
     {
-
-        var succes = this.db.Execute(@"DELETE FROM " + table + " WHERE " + a + " = @0", id);
-        if(succes == 1)
+        var succesa = this.db.Execute(@"DELETE FROM " + table + " WHERE " + a + " = @0", id);
+        if (succesa == 1)
         {
             return true;
         }
@@ -87,6 +86,16 @@ public class Update
         {
             return false;
         }
+        var succes = this.db.Execute(@"DELETE FROM " + table + " WHERE " + a + " = @0", id);
+        if (succes == 1)
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+        return false;
     }
 
     public bool WijzigItem(string  wijzigid, string wijzigprijs, string wijzigallergie, string wijzigitem, string table, string a, string b, string c, string d)

@@ -462,8 +462,9 @@ function downloadPdf() {
         chosenOptionsString += value + ",";
     });
 
-    url = "../downloadPdf.cshtml?" + chosenOptionsString + "&price=" + this.totalPrice;
+    url = "../downloadPdf.cshtml?" + chosenOptionsString;
     url = url.substring(0, url.length - 1);
+    url += "&price=" + this.totalPrice;
 
     window.open(url); 
 

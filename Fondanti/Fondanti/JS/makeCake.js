@@ -249,12 +249,12 @@ function placeStepInfo() {
 
         if (this.min === 0) {
             this.min = 1;
-        } else if (this.min > 15) {
-            this.min = 15;
+        } else if (this.min > 5) {
+            this.min = 5;
         }
 
-        if (this.max > 15) {
-            this.max = 15;
+        if (this.max > 5) {
+            this.max = 5;
         } else if (this.max === 0) {
             this.max = 1;
         }

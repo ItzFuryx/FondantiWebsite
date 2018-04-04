@@ -39,7 +39,7 @@ public class PDFCreator
             var pieces = item.Value.Split("|".ToCharArray());
             if (pieces[0] == string.Empty || pieces[0].Length < 3)
                 continue;
-            if (pieces[1].Contains("0") || pieces[1] == string.Empty)
+            if (pieces[1] == " 0"|| pieces[1] == string.Empty)
             {
                 pieces[1] = "-";
             }

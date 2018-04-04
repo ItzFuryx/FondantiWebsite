@@ -240,7 +240,7 @@ function placeStepInfo() {
 
     } else if (this.step === 2) {
         //Step 2
-        optionsHtml += '<div class="col"><input type="number" min="1" class="text-center mb-2 optionNumber"></div>';
+        optionsHtml += '<div class="col"><input type="number" min="1" max="500" class="text-center mb-2 optionNumber"></div>';
         //Set options text
         this.$makeCake.find("#optionsMakeCake").html(optionsHtml);
 

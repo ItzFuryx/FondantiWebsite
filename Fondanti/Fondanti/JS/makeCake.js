@@ -391,6 +391,7 @@ function getOptionValue() {
         if (price !== 0) {
             this.updateTotalPrice(price);
         }
+        this.addVisualProgress();
         this.clearCurrentStep();
     }
 }
@@ -414,11 +415,10 @@ function clearCurrentStep() {
     } else {
         //this.$makeCake.children().remove();
         this.$makeCake.find("#makeCakeNextStep").fadeOut(250);
-        this.$makeCake.append("<div class='col-12 text-center'><button id='downloadPdf'>Download prijs indicatie</button>");
+        this.$makeCake.append("<div class='col-12 text-center'><button class ='mt-3' id='downloadPdf'>Download prijs indicatie</button>");
         $("#downloadPdf").click(function () {
-            console.log("test");
             downloadPdf();
-        });
+        }); 
 
     }
 }
@@ -436,9 +436,54 @@ function updateTotalPrice(number) {
     } else {
         this.chosenOptionsPrices[this.step - 1] = number;
     }
-    
+
     this.totalPrice = this.totalPrice + number;
     this.$makeCake.find("#totalPrice").html(this.totalPrice);
+}
+
+function addVisualProgress() {
+    img = "";
+    text = "";
+    console.log(this.step);
+    switch (this.step) {
+        case 1:
+            img = "Thema";
+            text = chosenOptions[0] + " cake";
+            break;
+        case 2:
+            img = "Personen";
+            text = chosenOptions[1] + " personen";
+            break;
+        case 3:
+            img = "Type";
+            text = chosenOptions[2] + " cake";
+            break;
+        case 4:
+            img = "Lagen";
+            text = chosenOptions[3] + " lagen";
+            break;
+        case 5:
+            img = "Bekleding";
+            text = chosenOptions[4] + " bekleding";
+            break;
+        case 6:
+            img = "Vulling";
+            text = "Uw gekozen vullingen.";
+            break;
+        case 8:
+            img = "Decoratie";
+            text = chosenOptions[7] + " decoratie";
+            break;
+        default:
+
+            break;
+    }
+
+    if (img === "") {
+        return;
+    }
+    appendDiv = "<div class='col-3'><img class='img-fluid' src='/Imgs/BouwTaart/" + img + ".jpg' /><br><div class='text-center'>" + text + "</div ></div >";
+    this.$makeCake.find("#visualFeedback").append(appendDiv);
 }
 
 function downloadPdf() {
@@ -447,8 +492,13 @@ function downloadPdf() {
     console.log(this.chosenOptionsPrices);
 
     if (this.editedChosenOptions === 0) {
+        chosenOptions[0] = "Thema " + chosenOptions[0];
         chosenOptions[1] += " personen";
+        chosenOptions[2] += " cake";
         chosenOptions[3] += " lagen";
+        chosenOptions[4] += " bekleding";
+        chosenOptions[7] = "Decoratie " + chosenOptions[7];
+        chosenOptions[8] = "Lever datum : " + chosenOptions[8];
         for (i = 0; i < chosenOptions.length; i++) {
             if (chosenOptionsPrices.hasOwnProperty(i)) {
                 chosenOptions[i] = chosenOptions[i] + " | " + chosenOptionsPrices[i];

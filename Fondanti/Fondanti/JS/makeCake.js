@@ -122,18 +122,20 @@
     
     //Decoration
     this.titleStep8 = "Kies het niveau van decoratie";
-    this.valuesStep8 = ["Eenvoudig", "Gemiddeld", "Uitgebreid"];
-    this.pricesStep8 = [1, 2, 3];
+    this.valuesStep8 = [];
+    this.pricesStep8 = [];
     $.ajax({
         url: "../makeCakeDBValues.cshtml?table=5"
     }).done(function (response) {
         decoraties = response.split("|");
         decoraties.forEach(function (decoratie) {
-            priceDecoratie = response.split(",");
-            makeCake.pricesStep8[priceDecoratie[0] - 1] = priceDecoratie[1];
+            nameAndPrice = decoratie.split(",");
+            makeCake.valuesStep8.push(nameAndPrice[0]);
+            makeCake.pricesStep8.push(nameAndPrice[1]);
         });
 
         //Remove last value from array (empty value) and call function setStepInfo
+        makeCake.valuesStep8.pop();
         makeCake.pricesStep8.pop();
     });
 

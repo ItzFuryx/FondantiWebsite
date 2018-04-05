@@ -415,7 +415,10 @@ function clearCurrentStep() {
     } else {
         //this.$makeCake.children().remove();
         this.$makeCake.find("#makeCakeNextStep").fadeOut(250);
-        this.$makeCake.append("<div class='col-12 text-center'><button class ='mt-3' id='downloadPdf'>Download prijs indicatie</button>");
+        appendDiv = "<div class='col-12 text-center'><button class ='mt-3' id='downloadPdf'>Download prijs indicatie</button><br>";
+        appendDiv += "<h3>Mail ons met uw samengestelde taart: <a href='mailto: Jop.Wielens@nhl.nl'><i class='fas fa-envelope'></i></a></h3>";
+        this.$makeCake.append(appendDiv);
+
         $("#downloadPdf").click(function () {
             downloadPdf();
         }); 
@@ -444,7 +447,7 @@ function updateTotalPrice(number) {
 function addVisualProgress() {
     img = "";
     text = "";
-    console.log(this.step);
+
     switch (this.step) {
         case 1:
             img = "Thema";
@@ -487,9 +490,6 @@ function addVisualProgress() {
 }
 
 function downloadPdf() {
-    console.log(this.chosenOptions);
-    console.log(this.step6ChosenOptions);
-    console.log(this.chosenOptionsPrices);
 
     if (this.editedChosenOptions === 0) {
         chosenOptions[0] = "Thema " + chosenOptions[0];
@@ -499,6 +499,7 @@ function downloadPdf() {
         chosenOptions[4] += " bekleding";
         chosenOptions[7] = "Decoratie " + chosenOptions[7];
         chosenOptions[8] = "Lever datum : " + chosenOptions[8];
+
         for (i = 0; i < chosenOptions.length; i++) {
             if (chosenOptionsPrices.hasOwnProperty(i)) {
                 chosenOptions[i] = chosenOptions[i] + " | " + chosenOptionsPrices[i];

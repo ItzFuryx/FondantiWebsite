@@ -416,7 +416,7 @@ function clearCurrentStep() {
         //this.$makeCake.children().remove();
         this.$makeCake.find("#makeCakeNextStep").fadeOut(250);
         appendDiv = "<div class='col-12 text-center'><button class ='mt-3' id='downloadPdf'>Download prijs indicatie</button><br>";
-        appendDiv += "<h3>Mail ons met uw samengestelde taart: <a href='mailto: Jop.Wielens@nhl.nl'><i class='fas fa-envelope'></i></a></h3>";
+        appendDiv += "<h3>Mail ons met uw samengestelde taart: <a href='mailto: nic.lagerweij@gmail.com'><i class='fas fa-envelope'></i></a></h3>";
         this.$makeCake.append(appendDiv);
 
         $("#downloadPdf").click(function () {
